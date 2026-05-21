@@ -1,0 +1,924 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Daryez Smart Point</title>
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <main id="app" class="app-shell">
+      <section id="loginView" class="login-view">
+        <div class="login-visual" aria-hidden="true">
+          <div class="brand-mark">
+            <span>DSP</span>
+          </div>
+          <div class="receipt-preview">
+            <span></span>
+            <span></span>
+            <span></span>
+            <strong>$ 1,248.00</strong>
+          </div>
+        </div>
+        <form id="loginForm" class="login-panel">
+          <p class="eyebrow">Sistema local</p>
+          <h1>Daryez Smart Point</h1>
+          <p id="loginVersionText" class="version-stamp">Version 1.0.0</p>
+          <label>
+            Usuario
+            <input id="userInput" autocomplete="username" value="admin">
+          </label>
+          <label>
+            Contrasena
+            <input id="passwordInput" type="password" autocomplete="current-password" value="admin">
+          </label>
+          <button type="submit" class="primary-action">Ingresar</button>
+        </form>
+      </section>
+
+      <section id="mainView" class="main-view hidden">
+        <aside class="sidebar">
+          <div class="sidebar-brand">
+            <div class="brand-mark small">
+              <span>DSP</span>
+            </div>
+            <div>
+              <strong id="businessNameSide">Daryez Smart Point</strong>
+              <span>Smart POS <strong id="sidebarVersionText">v1.0.0</strong></span>
+            </div>
+          </div>
+          <nav id="navMenu" class="nav-menu" aria-label="Modulos">
+            <button class="nav-item active" data-view="dashboard" data-admin-only="yes">Inicio</button>
+            <button class="nav-item" data-view="pos">Punto de venta</button>
+            <button class="nav-item" data-view="customers" data-admin-only="yes">Clientes</button>
+            <button class="nav-item" data-view="products" data-admin-only="yes">Productos</button>
+            <button class="nav-item" data-view="suppliers" data-admin-only="yes">Proveedores</button>
+            <button class="nav-item" data-view="categories" data-admin-only="yes">Clasificaciones</button>
+            <button class="nav-item" data-view="inventory" data-admin-only="yes">Inventario</button>
+            <button class="nav-item" data-view="supplierInvoices" data-admin-only="yes">Control de facturas</button>
+            <button class="nav-item" data-view="credits" data-admin-only="yes">Creditos</button>
+            <button class="nav-item" data-view="history">Historial</button>
+            <button class="nav-item" data-view="reports" data-admin-only="yes">Reportes</button>
+            <button class="nav-item" data-view="invoiceDesigner" data-admin-only="yes">Factura</button>
+            <button class="nav-item" data-view="users" data-admin-only="yes">Usuarios</button>
+            <button class="nav-item" data-view="backup" data-admin-only="yes">Backup</button>
+            <button class="nav-item" data-view="cash">Corte de caja</button>
+            <button class="nav-item" data-view="settings" data-admin-only="yes">Configuracion</button>
+          </nav>
+        </aside>
+
+        <section class="workspace">
+          <header class="topbar">
+            <div class="topbar-copy">
+              <p class="eyebrow">Sesion activa</p>
+              <h2 id="viewTitle">Inicio</h2>
+              <p id="viewSubtitle" class="view-subtitle">Panel general del sistema.</p>
+            </div>
+            <div class="topbar-actions">
+              <div id="workspaceStatus" class="workspace-status"></div>
+              <span id="currentUserBadge" class="user-badge">Sin sesion</span>
+              <span id="clockText"></span>
+              <button id="logoutButton" class="ghost-action">Salir</button>
+            </div>
+          </header>
+
+          <div id="dashboard" class="view-section">
+            <div class="hero-grid">
+              <section class="hero-banner">
+                <p class="eyebrow">Centro operativo</p>
+                <h3 id="dashboardHeroTitle">Operacion lista para iniciar</h3>
+                <p id="dashboardHeroText" class="hero-copy">Abre la caja del dia, verifica inventario y empieza a registrar ventas.</p>
+                <div id="dashboardHeroStats" class="hero-stats"></div>
+              </section>
+              <section class="panel">
+                <div class="panel-header">
+                  <h3>Acciones rapidas</h3>
+                </div>
+                <div class="quick-actions-grid">
+                  <button id="dashboardNewSaleButton" class="quick-action-card">
+                    Nueva venta
+                    <span>Ir al punto de venta</span>
+                  </button>
+                  <button id="dashboardProductsButton" class="quick-action-card">
+                    Catalogo
+                    <span>Productos y precios</span>
+                  </button>
+                  <button id="dashboardReportsButton" class="quick-action-card">
+                    Reportes
+                    <span>Resumen por fecha</span>
+                  </button>
+                  <button id="dashboardBackupButton" class="quick-action-card">
+                    Backup
+                    <span>Respaldar informacion</span>
+                  </button>
+                </div>
+              </section>
+            </div>
+            <div class="summary-grid">
+              <article class="metric">
+                <span>Ventas de hoy</span>
+                <strong id="salesMetric">$0.00</strong>
+              </article>
+              <article class="metric">
+                <span>Productos</span>
+                <strong id="productsMetric">0</strong>
+              </article>
+              <article class="metric">
+                <span>Creditos abiertos</span>
+                <strong id="creditsMetric">0</strong>
+              </article>
+              <article class="metric">
+                <span>Caja actual</span>
+                <strong id="cashMetric">$0.00</strong>
+              </article>
+            </div>
+            <div class="split-layout">
+              <section class="panel">
+                <div class="panel-header">
+                  <h3>Atencion del dia</h3>
+                </div>
+                <div id="dashboardAlerts" class="compact-list"></div>
+              </section>
+              <section class="panel">
+                <div class="panel-header">
+                  <h3>Ultimas ventas</h3>
+                </div>
+                <div id="recentSales" class="compact-list"></div>
+              </section>
+            </div>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Actividad reciente</h3>
+              </div>
+              <div id="recentActivity" class="compact-list"></div>
+            </section>
+          </div>
+
+          <div id="pos" class="view-section hidden">
+            <div id="posStatusBar" class="status-strip"></div>
+            <div class="pos-layout">
+              <section class="panel sale-panel">
+                <div class="panel-header">
+                  <h3>Nueva venta</h3>
+                  <div class="segmented">
+                    <button class="segment active" data-pay-type="cash">Efectivo</button>
+                    <button class="segment" data-pay-type="credit">Credito</button>
+                  </div>
+                </div>
+                <div class="search-row">
+                  <input id="productSearch" placeholder="Escanea codigo de barras o busca por descripcion">
+                  <button id="addFirstMatchButton" class="secondary-action">Agregar</button>
+                </div>
+                <div id="productResults" class="product-results"></div>
+              </section>
+              <section class="panel cart-panel">
+                <div class="panel-header">
+                  <h3>Detalle de venta</h3>
+                  <div class="inline-actions">
+                    <button id="closeCashFromPosButton" class="ghost-action">Cerrar caja</button>
+                    <button id="clearCartButton" class="ghost-action">Limpiar</button>
+                  </div>
+                </div>
+                <div id="cartItems" class="cart-items"></div>
+                <div class="totals">
+                  <div><span>Subtotal</span><strong id="subtotalText">$0.00</strong></div>
+                  <div><span>Descuento</span><input id="discountInput" type="number" min="0" value="0"></div>
+                  <div class="grand-total"><span>Total</span><strong id="totalText">$0.00</strong></div>
+                </div>
+                <div id="creditFields" class="credit-fields hidden">
+                  <label>Cliente
+                    <select id="saleCustomerSelect"></select>
+                  </label>
+                  <label>Abono inicial
+                    <input id="initialPaymentInput" type="number" min="0" value="0">
+                  </label>
+                </div>
+                <div id="cashCustomerFields" class="credit-fields">
+                  <label>Cliente registrado
+                    <select id="cashCustomerSelect"></select>
+                  </label>
+                  <label>Cliente rapido
+                    <input id="cashCustomerNameInput" placeholder="Nombre para factura">
+                  </label>
+                </div>
+                <button id="finishSaleButton" class="primary-action full">Cobrar venta</button>
+              </section>
+            </div>
+          </div>
+
+          <div id="customers" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Clientes</h3>
+                <div class="inline-actions">
+                  <button id="newCustomerButton" class="ghost-action">Nuevo</button>
+                  <button id="saveCustomerButton" class="primary-action">Guardar</button>
+                </div>
+              </div>
+              <div class="form-grid">
+                <label>Clave<input id="customerCode"></label>
+                <label>Nombre<input id="customerName"></label>
+                <label>Referencia fiscal<input id="customerTaxId" placeholder="RFC/NIT/CI"></label>
+                <label>Telefono<input id="customerPhone"></label>
+                <label class="wide-field">Direccion<input id="customerAddress"></label>
+              </div>
+              <div id="customerTable" class="data-table"></div>
+            </section>
+          </div>
+
+          <div id="products" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Productos y servicios</h3>
+                <div class="inline-actions">
+                  <button id="newProductButton" class="ghost-action">Nuevo</button>
+                  <button id="saveProductButton" class="primary-action">Guardar</button>
+                </div>
+              </div>
+              <div class="form-grid">
+                <label>Codigo de barras<input id="productCode" inputmode="numeric" placeholder="Automatico EAN-13 interno"></label>
+                <button id="scanProductCodeButton" class="secondary-action" type="button">Escanear codigo</button>
+                <label>Descripcion<input id="productDescription"></label>
+                <label>Proveedor<select id="productSupplier"></select></label>
+                <label>Clasificacion<select id="productCategory"></select></label>
+                <label>Unidad<input id="productUnit" value="Pieza"></label>
+                <label>Costo<input id="productCost" type="number" value="0"></label>
+                <label>Precio publico<input id="productPrice" type="number" value="0"></label>
+                <label>Existencia inicial<input id="productStock" type="number" value="0"></label>
+                <label>Stock minimo<input id="productMinStock" type="number" min="0" value="5"></label>
+                <label class="checkbox-row"><input id="productIsService" type="checkbox"> Servicio sin inventario</label>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Catalogo</h3>
+              </div>
+              <div id="productTable" class="data-table"></div>
+            </section>
+          </div>
+
+          <div id="suppliers" class="view-section hidden">
+            <section class="panel compact-form-panel">
+              <div class="panel-header">
+                <h3>Proveedores</h3>
+                <button id="saveSupplierButton" class="primary-action">Guardar</button>
+              </div>
+              <div class="form-grid">
+                <label>Clave<input id="supplierCode"></label>
+                <label>Nombre<input id="supplierName"></label>
+                <label>Telefono<input id="supplierPhone"></label>
+              </div>
+              <div id="supplierTable" class="data-table"></div>
+            </section>
+          </div>
+
+          <div id="categories" class="view-section hidden">
+            <section class="panel compact-form-panel">
+              <div class="panel-header">
+                <h3>Clasificaciones</h3>
+                <div class="inline-actions">
+                  <button id="newCategoryButton" class="ghost-action">Nueva</button>
+                  <button id="saveCategoryButton" class="primary-action">Guardar</button>
+                </div>
+              </div>
+              <div class="form-grid">
+                <label>Clave<input id="categoryCode"></label>
+                <label>Descripcion<input id="categoryName"></label>
+              </div>
+              <div id="categoryTable" class="data-table"></div>
+            </section>
+          </div>
+
+          <div id="inventory" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Existencias actuales</h3>
+              </div>
+              <div id="inventoryStockTable" class="data-table"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Entradas a inventario</h3>
+                <button id="saveInventoryButton" class="primary-action">Registrar entrada</button>
+              </div>
+              <div class="form-grid">
+                <label>Producto<select id="inventoryProduct"></select></label>
+                <label>Cantidad<input id="inventoryQuantity" type="number" value="1" min="1"></label>
+                <label>Observaciones<input id="inventoryNotes" placeholder="Compra, ajuste, devolucion"></label>
+              </div>
+              <div id="inventoryTable" class="data-table"></div>
+            </section>
+          </div>
+
+          <div id="supplierInvoices" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3>Control de facturas de proveedor</h3>
+                  <p class="view-subtitle">Registra facturas recibidas, vencimientos, montos y alertas operativas.</p>
+                </div>
+                <button id="clearSupplierInvoiceButton" class="ghost-action">Nueva factura</button>
+              </div>
+              <div id="supplierInvoiceAlerts" class="compact-list"></div>
+              <div class="form-grid">
+                <label>Proveedor<select id="supplierInvoiceProvider"></select></label>
+                <label>Numero de factura<input id="supplierInvoiceNumber"></label>
+                <label>Fecha de ingreso<input id="supplierInvoiceEntryDate" type="date"></label>
+                <label>Fecha de expiracion<input id="supplierInvoiceDueDate" type="date"></label>
+                <label>Monto total<input id="supplierInvoiceAmount" type="number" min="0" step="0.01"></label>
+                <label>Estado<select id="supplierInvoiceStatus">
+                  <option value="pending">Pendiente</option>
+                  <option value="paid">Pagada</option>
+                  <option value="expired">Vencida</option>
+                </select></label>
+                <label class="wide-field">Observaciones<input id="supplierInvoiceNotes" placeholder="Condiciones, folio interno, metodo de pago, responsable"></label>
+                <button id="saveSupplierInvoiceButton" class="primary-action">Guardar factura</button>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Facturas registradas</h3>
+              </div>
+              <div id="supplierInvoiceTable" class="data-table"></div>
+            </section>
+          </div>
+
+          <div id="credits" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Cuentas por cobrar</h3>
+                <button id="savePaymentButton" class="primary-action">Registrar abono</button>
+              </div>
+              <div class="form-grid">
+                <label>Credito<select id="creditSelect"></select></label>
+                <label>Abono<input id="paymentAmount" type="number" min="0" value="0"></label>
+              </div>
+              <div id="creditsTable" class="data-table"></div>
+            </section>
+          </div>
+
+          <div id="history" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Historial de ventas</h3>
+                <div class="inline-actions">
+                  <input id="historyDateInput" type="date">
+                  <button id="todayHistoryButton" class="ghost-action">Hoy</button>
+                </div>
+              </div>
+              <div id="historySummary" class="summary-grid compact-summary"></div>
+              <div id="historyTable" class="data-table"></div>
+            </section>
+          </div>
+
+          <div id="reports" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Reportes</h3>
+                <div class="inline-actions">
+                  <input id="reportDateInput" type="date">
+                  <button id="refreshReportsButton" class="primary-action">Actualizar</button>
+                </div>
+              </div>
+              <div id="reportsSummary" class="summary-grid"></div>
+              <div class="split-layout">
+                <div class="panel inner-panel">
+                  <div class="panel-header"><h3>Ventas por metodo de pago</h3></div>
+                  <div id="paymentReportTable" class="data-table"></div>
+                </div>
+                <div class="panel inner-panel">
+                  <div class="panel-header"><h3>Productos vendidos</h3></div>
+                  <div id="productReportTable" class="data-table"></div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div id="invoiceDesigner" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3>Personalizacion de factura</h3>
+                  <p class="view-subtitle">Configura el formato comercial sin mezclarlo con la configuracion general.</p>
+                </div>
+                <button id="saveInvoiceDesignButton" class="primary-action">Guardar diseño</button>
+              </div>
+              <div class="form-grid">
+                <label>Titulo de factura<input id="invoiceDesignTitle" placeholder="Factura / Nota de venta"></label>
+                <label>Serie<input id="invoiceDesignSeries" placeholder="A"></label>
+                <label>Mostrar logo<select id="invoiceDesignShowLogo">
+                  <option value="yes">Si</option>
+                  <option value="no">No</option>
+                </select></label>
+                <label>Mostrar QR<select id="invoiceDesignShowQr">
+                  <option value="yes">Si</option>
+                  <option value="no">No</option>
+                </select></label>
+                <label>Mostrar impuestos<select id="invoiceDesignShowTax">
+                  <option value="yes">Si</option>
+                  <option value="no">No</option>
+                </select></label>
+                <label>Formato<select id="invoiceDesignFormat">
+                  <option value="thermal">Ticket termico</option>
+                  <option value="letter">Carta / PDF</option>
+                  <option value="compact">Compacto</option>
+                </select></label>
+                <label>Plantilla activa<select id="invoiceDesignMode">
+                  <option value="standard">Diseno del sistema</option>
+                  <option value="excel">Excel importado</option>
+                  <option value="custom">HTML libre</option>
+                </select></label>
+                <label class="file-import">Subir logo
+                  <input id="invoiceLogoInput" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml">
+                </label>
+                <label class="wide-field">Texto legal<input id="invoiceDesignLegalText" placeholder="Regimen, autorizacion, datos fiscales o nota legal"></label>
+                <label class="file-import">Importar plantilla Excel
+                  <input id="invoiceTemplateInput" type="file" accept=".xls,.xlsx,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+                </label>
+                <label class="file-import">Importar HTML
+                  <input id="invoiceHtmlTemplateInput" type="file" accept=".html,.htm,.txt,text/html,text/plain">
+                </label>
+              </div>
+              <div id="invoiceTemplateStatus" class="status-strip"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <div>
+                  <h3>Editor libre</h3>
+                  <p class="view-subtitle">Usa HTML, CSS y placeholders para crear cualquier formato propio.</p>
+                </div>
+              </div>
+              <div class="designer-editor-grid">
+                <label>HTML de factura
+                  <textarea id="invoiceCustomHtml" class="code-editor" spellcheck="false"></textarea>
+                </label>
+                <label>CSS de factura
+                  <textarea id="invoiceCustomCss" class="code-editor" spellcheck="false"></textarea>
+                </label>
+              </div>
+              <div class="placeholder-palette">
+                <span>{{logo}}</span>
+                <span>{{empresa}}</span>
+                <span>{{factura}}</span>
+                <span>{{ncf}}</span>
+                <span>{{comprobante_fiscal}}</span>
+                <span>{{tipo_comprobante}}</span>
+                <span>{{rnc_empresa}}</span>
+                <span>{{rnc_cliente}}</span>
+                <span>{{fecha}}</span>
+                <span>{{cliente}}</span>
+                <span>{{telefono}}</span>
+                <span>{{direccion}}</span>
+                <span>{{productos}}</span>
+                <span>{{productos_tabla}}</span>
+                <span>{{subtotal}}</span>
+                <span>{{itbis}}</span>
+                <span>{{total}}</span>
+                <span>{{metodo_pago}}</span>
+                <span>{{nota}}</span>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Vista previa</h3>
+              </div>
+              <div id="invoiceDesignPreview" class="invoice-preview"></div>
+            </section>
+          </div>
+
+          <div id="users" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Usuarios y vendedores</h3>
+                <div class="inline-actions">
+                  <button id="newUserButton" class="ghost-action">Nuevo</button>
+                  <button id="saveUserButton" class="primary-action">Guardar usuario</button>
+                </div>
+              </div>
+              <div class="form-grid">
+                <label>Usuario<input id="userCodeInput"></label>
+                <label>Nombre<input id="userNameInput"></label>
+                <label>Contrasena<input id="userPasswordInput" type="password"></label>
+                <label>Rol<select id="userRoleInput">
+                  <option value="cashier">Cajero</option>
+                  <option value="supervisor">Supervisor</option>
+                  <option value="admin">Administrador</option>
+                </select></label>
+                <label>Estado<select id="userStatusInput">
+                  <option value="active">Activo</option>
+                  <option value="inactive">Inactivo</option>
+                </select></label>
+              </div>
+              <div id="usersTable" class="data-table"></div>
+            </section>
+          </div>
+
+          <div id="backup" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Backup y restauracion</h3>
+              </div>
+              <div class="backup-actions">
+                <button id="exportBackupButton" class="primary-action">Exportar backup</button>
+                <button id="exportDemoBackupButton" class="secondary-action">Exportar demo</button>
+                <button id="loadDemoButton" class="ghost-action">Cargar demo local</button>
+                <label class="file-import">Importar backup
+                  <input id="importBackupInput" type="file" accept="application/json">
+                </label>
+              </div>
+              <div id="backupStatus" class="status-strip"></div>
+              <textarea id="backupTextArea" class="backup-box" placeholder="Aqui aparecera el backup exportado o puedes pegar uno para restaurarlo."></textarea>
+              <div class="inline-actions">
+                <button id="copyBackupButton" class="ghost-action">Copiar backup</button>
+                <button id="restoreBackupButton" class="secondary-action">Restaurar desde texto</button>
+              </div>
+              <div class="split-layout compact-split">
+                <section class="subpanel">
+                  <div class="panel-header"><h3>Historial de backups</h3></div>
+                  <div id="backupHistoryTable" class="data-table"></div>
+                </section>
+                <section class="subpanel">
+                  <div class="panel-header"><h3>Integridad</h3></div>
+                  <div id="integrityIssues" class="compact-list"></div>
+                </section>
+              </div>
+              <section class="subpanel log-panel">
+                <div class="panel-header"><h3>Logs del sistema</h3></div>
+                <div id="systemLogTable" class="data-table"></div>
+              </section>
+            </section>
+          </div>
+
+          <div id="cash" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Corte de caja</h3>
+                <button id="closeCashButton" class="primary-action">Generar corte</button>
+              </div>
+              <div class="form-grid cash-opening-form">
+                <label>Monto inicial de caja
+                  <input id="openingCashInput" type="number" min="0" value="0">
+                </label>
+                <label>Responsable
+                  <input id="cashierInput" placeholder="Nombre del cajero">
+                </label>
+                <label>Notas de apertura
+                  <input id="cashNotesInput" placeholder="Cambio inicial, turno, observaciones">
+                </label>
+                <button id="saveOpeningCashButton" class="secondary-action">Abrir caja</button>
+              </div>
+              <div id="cashSummary" class="cash-summary"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Historial de cajas</h3>
+              </div>
+              <div id="cashSessionTable" class="data-table"></div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Ventas registradas</h3>
+              </div>
+              <div id="salesTable" class="data-table"></div>
+            </section>
+          </div>
+
+          <div id="settings" class="view-section hidden">
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Datos del negocio</h3>
+                <button id="saveSettingsButton" class="primary-action">Guardar</button>
+              </div>
+              <div class="form-grid">
+                <label>Nombre comercial<input id="businessName"></label>
+                <label>Telefono<input id="businessPhone"></label>
+                <label>Direccion<input id="businessAddress"></label>
+                <label>Mensaje en ticket<input id="ticketMessage"></label>
+                <label>Color principal<select id="brandTheme">
+                  <option value="teal">Verde smart</option>
+                  <option value="blue">Azul ejecutivo</option>
+                  <option value="red">Rojo comercial</option>
+                </select></label>
+                <label>Modo visual<select id="themeMode">
+                  <option value="light">Claro profesional</option>
+                  <option value="dark">Oscuro profesional</option>
+                </select></label>
+                <label>Moneda<input id="currencyCode" maxlength="3" placeholder="MXN"></label>
+                <label>Impuesto<input id="taxName" placeholder="IVA"></label>
+                <label>Porcentaje impuesto<input id="taxRate" type="number" min="0" max="100" step="0.01"></label>
+                <label>Prefijo de factura<input id="invoicePrefix" placeholder="DSP"></label>
+                <label>Comprobante fiscal<select id="fiscalEnabled">
+                  <option value="no">No usar</option>
+                  <option value="yes">Usar NCF</option>
+                </select></label>
+                <label>RNC / ID fiscal negocio<input id="businessFiscalId" placeholder="RNC, NIT o ID fiscal"></label>
+                <label>Tipo NCF por defecto<select id="defaultFiscalType">
+                  <option value="none">Sin comprobante</option>
+                  <option value="B01">B01 Credito fiscal</option>
+                  <option value="B02">B02 Consumidor final</option>
+                  <option value="B14">B14 Regimen especial</option>
+                  <option value="B15">B15 Gubernamental</option>
+                </select></label>
+                <label>Siguiente B01<input id="fiscalNextB01" type="number" min="1"></label>
+                <label>Siguiente B02<input id="fiscalNextB02" type="number" min="1"></label>
+                <label>Siguiente B14<input id="fiscalNextB14" type="number" min="1"></label>
+                <label>Siguiente B15<input id="fiscalNextB15" type="number" min="1"></label>
+                <label>Ancho de ticket<select id="ticketWidth">
+                  <option value="58">58 mm</option>
+                  <option value="80">80 mm</option>
+                </select></label>
+                <label>Encabezado de ticket<input id="ticketHeaderText" placeholder="Texto superior"></label>
+                <label>Pie de ticket<input id="ticketFooterText" placeholder="Texto final"></label>
+                <label>Mostrar direccion<select id="ticketShowAddress">
+                  <option value="yes">Si</option>
+                  <option value="no">No</option>
+                </select></label>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Lector de codigo de barras</h3>
+              </div>
+              <div class="form-grid">
+                <label>Lector activo<select id="scannerEnabled">
+                  <option value="yes">Si</option>
+                  <option value="no">No</option>
+                </select></label>
+                <label>Accion al escanear<select id="scannerAutoAdd">
+                  <option value="yes">Agregar directo</option>
+                  <option value="no">Solo buscar</option>
+                </select></label>
+                <label>Tecla final del lector<select id="scannerSuffix">
+                  <option value="Enter">Enter</option>
+                  <option value="Tab">Tab</option>
+                  <option value="none">Ninguna</option>
+                </select></label>
+                <label>Longitud minima<input id="scannerMinLength" type="number" min="3" value="6"></label>
+                <label>Enfocar venta al abrir<select id="scannerFocusOnSale">
+                  <option value="yes">Si</option>
+                  <option value="no">No</option>
+                </select></label>
+                <label>Captura en alta de producto<select id="scannerCaptureOnProduct">
+                  <option value="yes">Si</option>
+                  <option value="no">No</option>
+                </select></label>
+              </div>
+              <div class="scanner-test">
+                <input id="scannerTestInput" placeholder="Haz clic aqui y escanea una etiqueta para probar">
+                <button id="detectScannerButton" class="secondary-action">Detectar lector</button>
+                <strong id="scannerStatusText">Sin prueba registrada</strong>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Inventario y alertas</h3>
+              </div>
+              <div class="form-grid">
+                <label>Alertas de stock bajo<select id="lowStockAlertsEnabled">
+                  <option value="yes">Si</option>
+                  <option value="no">No</option>
+                </select></label>
+                <label>Stock minimo por defecto<input id="defaultMinStock" type="number" min="0" value="5"></label>
+                <label>Registrar alta inicial en inventario<select id="autoInventoryOnCreate">
+                  <option value="yes">Si</option>
+                  <option value="no">No</option>
+                </select></label>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Restablecimiento</h3>
+              </div>
+              <div class="inline-actions">
+                <button id="openResetSystemButton" class="secondary-action">Restablecer todo</button>
+              </div>
+            </section>
+            <section class="panel">
+              <div class="panel-header">
+                <h3>Acerca de / actualizacion</h3>
+              </div>
+              <div class="compact-list">
+                <div class="compact-row">
+                  <div>
+                    <strong>Version instalada</strong>
+                    <span id="systemVersionText">v1.0.0</span>
+                  </div>
+                  <strong id="systemSchemaText">Esquema 2</strong>
+                </div>
+                <div class="compact-row">
+                  <div>
+                    <strong>Compatibilidad de backup</strong>
+                    <span id="backupCompatibilityText">Backups compatibles desde esquema 1</span>
+                  </div>
+                  <strong>JSON</strong>
+                </div>
+                <div class="compact-row">
+                  <div>
+                    <strong>Proceso de actualizacion</strong>
+                    <span id="updateGuideText">Antes de actualizar: exporta backup, reemplaza archivos y luego restaura el backup en la nueva version.</span>
+                  </div>
+                  <strong>Manual</strong>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <div id="openingCashModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="openingCashTitle">
+      <section class="modal-card">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Inicio de turno</p>
+            <h3 id="openingCashTitle">Abrir caja</h3>
+          </div>
+        </div>
+        <div class="form-grid modal-grid">
+          <label>Monto inicial
+            <input id="modalOpeningCashInput" type="number" min="0" value="0">
+          </label>
+          <label>Responsable
+            <input id="modalCashierInput" placeholder="Nombre del cajero">
+          </label>
+          <label class="wide-field">Notas
+            <input id="modalCashNotesInput" placeholder="Cambio inicial, turno, observaciones">
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button id="confirmOpeningCashButton" class="primary-action">Abrir caja</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="invoiceModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="invoiceTitle">
+      <section class="modal-card invoice-card">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Documento generado</p>
+            <h3 id="invoiceTitle">Factura / ticket</h3>
+          </div>
+          <button class="ghost-action" data-close-modal="invoiceModal">Cerrar</button>
+        </div>
+        <div id="invoicePreview" class="invoice-preview"></div>
+        <div class="modal-actions">
+          <button id="editInvoiceButton" class="secondary-action">Editar datos</button>
+          <button id="printInvoiceButton" class="primary-action">Imprimir</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="paymentModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="paymentTitle">
+      <section class="modal-card">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Cobro</p>
+            <h3 id="paymentTitle">Registrar pago</h3>
+          </div>
+          <button class="ghost-action" data-close-modal="paymentModal">Cerrar</button>
+        </div>
+        <div class="payment-total">
+          <span>Total a cobrar</span>
+          <strong id="paymentTotalText">$0.00</strong>
+        </div>
+        <div class="form-grid modal-grid">
+          <label>Metodo de pago<select id="paymentMethodSelect"></select></label>
+          <label>Monto recibido<input id="amountReceivedInput" type="number" min="0" value="0"></label>
+          <label>Cambio a devolver<input id="changeDueInput" disabled value="$0.00"></label>
+          <label>Cliente<select id="paymentCustomerSelect"></select></label>
+          <label>Comprobante fiscal<select id="fiscalReceiptTypeSelect">
+            <option value="none">Sin comprobante</option>
+            <option value="B01">B01 Credito fiscal</option>
+            <option value="B02">B02 Consumidor final</option>
+            <option value="B14">B14 Regimen especial</option>
+            <option value="B15">B15 Gubernamental</option>
+          </select></label>
+          <label>RNC / ID fiscal cliente<input id="fiscalCustomerIdInput" placeholder="RNC, NIT o cedula fiscal"></label>
+          <label id="creditInitialPaymentField" class="hidden">Abono inicial<input id="creditInitialPaymentInput" type="number" min="0" value="0"></label>
+          <label id="creditCashReceivedField" class="hidden">Efectivo recibido para abono<input id="creditCashReceivedInput" type="number" min="0" value="0"></label>
+          <label id="creditChangeField" class="hidden">Cambio por abono<input id="creditChangeDueInput" disabled value="$0.00"></label>
+          <label class="wide-field">Referencia / observacion<input id="paymentReferenceInput" placeholder="Ultimos digitos, transferencia, nota"></label>
+        </div>
+        <div class="modal-actions">
+          <button id="confirmPaymentButton" class="primary-action">Confirmar cobro</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="editInvoiceModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="editInvoiceTitle">
+      <section class="modal-card">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Correccion de documento</p>
+            <h3 id="editInvoiceTitle">Editar factura</h3>
+          </div>
+          <button class="ghost-action" data-close-modal="editInvoiceModal">Cerrar</button>
+        </div>
+        <div class="form-grid modal-grid">
+          <label>Folio
+            <input id="editInvoiceFolio" disabled>
+          </label>
+          <label>Cliente
+            <input id="editInvoiceCustomer">
+          </label>
+          <label>Referencia fiscal
+            <input id="editInvoiceTaxId" placeholder="RFC/NIT/CI">
+          </label>
+          <label class="wide-field">Notas
+            <input id="editInvoiceNotes" placeholder="Motivo de correccion o datos de facturacion">
+          </label>
+        </div>
+        <div class="panel inner-panel">
+          <div class="panel-header">
+            <h3>Articulos vendidos</h3>
+          </div>
+          <div id="editInvoiceItems" class="data-table"></div>
+        </div>
+        <div class="modal-actions">
+          <button id="saveInvoiceEditButton" class="primary-action">Guardar cambios</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="returnModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="returnTitle">
+      <section class="modal-card">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Post venta</p>
+            <h3 id="returnTitle">Registrar devolucion</h3>
+          </div>
+          <button class="ghost-action" data-close-modal="returnModal">Cerrar</button>
+        </div>
+        <div class="form-grid modal-grid">
+          <label>Folio
+            <input id="returnFolio" disabled>
+          </label>
+          <label>Producto
+            <select id="returnItemSelect"></select>
+          </label>
+          <label>Cantidad
+            <input id="returnQuantityInput" type="number" min="1" value="1">
+          </label>
+          <label class="wide-field">Motivo
+            <input id="returnReasonInput" placeholder="Cambio, producto defectuoso, error de captura">
+          </label>
+        </div>
+        <div class="modal-actions">
+          <button id="confirmReturnButton" class="primary-action">Aplicar devolucion</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="cashCutModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="cashCutTitle">
+      <section class="modal-card invoice-card">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Cierre de turno</p>
+            <h3 id="cashCutTitle">Corte de caja</h3>
+          </div>
+          <button class="ghost-action" data-close-modal="cashCutModal">Cerrar</button>
+        </div>
+        <div id="cashCutPreview" class="invoice-preview"></div>
+        <div class="modal-actions">
+          <button id="printCashCutButton" class="primary-action">Imprimir corte</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="installChoiceModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="installChoiceTitle">
+      <section class="modal-card">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Primera ejecucion</p>
+            <h3 id="installChoiceTitle">Instalacion nueva detectada</h3>
+          </div>
+        </div>
+        <p class="view-subtitle">Parece un equipo o perfil nuevo. Puedes continuar con la base de ejemplo o limpiar el sistema antes de empezar.</p>
+        <div class="modal-actions">
+          <button id="installKeepDemoButton" class="ghost-action">Mantener base inicial</button>
+          <button id="installCleanButton" class="primary-action">Iniciar limpio</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="resetSystemModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="resetSystemTitle">
+      <section class="modal-card">
+        <div class="modal-header">
+          <div>
+            <p class="eyebrow">Mantenimiento</p>
+            <h3 id="resetSystemTitle">Restablecer sistema</h3>
+          </div>
+          <button class="ghost-action" data-close-modal="resetSystemModal">Cerrar</button>
+        </div>
+        <p class="view-subtitle">Puedes volver a una base inicial con datos de ejemplo o dejar el sistema completamente limpio.</p>
+        <div class="modal-actions">
+          <button id="resetDemoButton" class="ghost-action">Cargar base inicial</button>
+          <button id="resetCleanButton" class="primary-action">Dejar limpio</button>
+        </div>
+      </section>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+    <script src="app.js"></script>
+  </body>
+</html>

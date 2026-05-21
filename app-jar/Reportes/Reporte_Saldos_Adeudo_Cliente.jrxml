@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="1b17618a-c965-4e07-9b26-d1a32db06914">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="Cliente" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="Titulo" class="java.lang.String"/>
+	<parameter name="Total_importe" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select cli.id_cli, cli.Nombre, SUM(hist.abono_cargo) as Saldo from hist_pagos_credito as hist inner join cat_clientes as cli
+on cli.id_cli=hist.Cve_cliente
+where cli.Nombre like '%'+$P{Cliente}+'%'
+GROUP BY cli.id_cli, cli.Nombre
+HAVING SUM(hist.abono_cargo) >0
+ORDER BY Saldo DESC]]>
+	</queryString>
+	<field name="id_cli" class="java.lang.String"/>
+	<field name="Nombre" class="java.lang.String"/>
+	<field name="Saldo" class="java.math.BigDecimal"/>
+	<variable name="Sumatoria" class="java.lang.Float" calculation="Sum">
+		<variableExpression><![CDATA[$F{Saldo}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="82" splitType="Stretch">
+			<image>
+				<reportElement x="5" y="0" width="83" height="80" uuid="6f26956c-57fb-4ca0-8a10-4bb3fea7b143"/>
+				<imageExpression><![CDATA["Logo_empresa.png"]]></imageExpression>
+			</image>
+			<textField pattern="dd-MMM-yyyy">
+				<reportElement x="472" y="30" width="100" height="20" uuid="0e3f9ec3-5ee4-400a-bd6a-d5eadcfb3b34"/>
+				<textElement textAlignment="Right">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="544" y="10" width="28" height="20" uuid="2a68fd84-b076-4541-9fc7-e5d424baacef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="504" y="10" width="40" height="20" uuid="d24e7993-f8ef-4b04-bf7f-bee4bf90d6b4"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Hoja:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="86" y="10" width="418" height="28" forecolor="#000000" uuid="11394e7e-8b75-47d8-aeb3-80669fed0818"/>
+				<textElement textAlignment="Center">
+					<font fontName="Times New Roman" size="16" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Titulo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="2" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="1" width="71" height="20" uuid="eefb55b4-1998-40e3-a7fe-7fe34c5ea393"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[CLAVE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="71" y="1" width="401" height="20" uuid="90584543-1b87-4314-b19d-4c0b97e297ed"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[NOMBRE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="472" y="1" width="100" height="20" uuid="8a835a6b-2d42-457e-bc93-4939c70df8cb"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[SALDO]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="21" width="572" height="1" uuid="33b3cdd1-1e41-4a58-8273-cb8d4bbcc037"/>
+			</line>
+			<line>
+				<reportElement x="0" y="1" width="572" height="1" uuid="c163bd06-68d3-4e77-9246-97f62bebe782"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="5" y="0" width="66" height="15" uuid="4a775055-ca8d-451c-a0e5-6dfc40e4db44"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id_cli}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="77" y="0" width="395" height="15" uuid="827b241a-97f1-48a8-99af-fdeb2bce0d4f"/>
+				<textElement verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Nombre}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="472" y="0" width="95" height="15" uuid="b0f8d20f-a9a0-4dbe-ba5a-a7649ac836fa"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Saldo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="33" splitType="Stretch">
+			<textField>
+				<reportElement x="233" y="13" width="80" height="20" uuid="4aab5a13-e664-497d-9542-63b6a4456bf9"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="313" y="13" width="40" height="20" uuid="c5781c42-d53c-43ed-b520-0bd20727acb8"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="25" splitType="Stretch">
+			<staticText>
+				<reportElement x="397" y="4" width="60" height="20" uuid="dfbd6534-f1ed-4974-aa74-8e11d0dfe728"/>
+				<textElement textAlignment="Center" verticalAlignment="Bottom">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement x="457" y="4" width="110" height="20" uuid="f8140a43-5b7a-49c7-8fde-0b2ef714a56d"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{Total_importe}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="2" width="571" height="1" uuid="28943059-ee3b-4468-87d9-95c6fdd42d26"/>
+				<graphicElement>
+					<pen lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

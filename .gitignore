@@ -1,0 +1,9 @@
+.vercel
+node_modules
+.env
+data
+logs
+uploads
+*.db
+*.sqlite
+*.sqlite3
